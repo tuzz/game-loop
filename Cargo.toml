@@ -3,7 +3,11 @@ name = "game-loop"
 version = "0.1.0"
 authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/tuzz/game-loop"
+documentation = "https://github.com/tuzz/game-loop"
+homepage = "https://crates.io/crates/game-loop"
+description = "A Rust crate that implements a frame-rate-independent game loop."
+keywords = ["game", "loop", "frame", "rate", "independent"]
+categories = ["game-development", "simulation", "rendering"]
