@@ -10,10 +10,12 @@ and is extremely lightweight with no dependencies.
 use game_loop::game_loop;
 
 fn main() {
-  game_loop(240, |g| {
-    // call your update function here
+  let game = YourGame::new();
+
+  game_loop(game, 240, |g| {
+    g.game.your_update_function();
   }, |g| {
-    // call your render function here
+    g.game.your_render_function();
   });
 }
 ```
@@ -24,10 +26,11 @@ slow it down if you wish. This may be useful if vsync is enabled or to save
 power on mobile devices. One way to slow it down is with
 [`std::thread::sleep`](https://doc.rust-lang.org/std/thread/fn.sleep.html).
 
-The `g` closure argument lets you query the game loop's running time, how many
-updates there have been, etc. It also provides a `blending_factor` that you may
-use in your render function to interpolate frames and produce smoother
-animations. See the article above for more explanation.
+The `g` closure argument lets you access your `game` state which can be anything
+you like. You can also access the game loop's running time, how many updates
+there have been, etc. It also provides a `blending_factor` that you may use in
+your render function to interpolate frames and produce smoother animations. See
+the article above for more explanation.
 
 ## Example
 

@@ -1,9 +1,9 @@
 use std::time::Instant;
 
-pub fn game_loop<U, R>(updates_per_second: u32, mut update: U, mut render: R) -> Control
-    where U: FnMut(&mut Control), R: FnMut(&mut Control)
+pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, mut update: U, mut render: R) -> Control<G>
+    where U: FnMut(&mut Control<G>), R: FnMut(&mut Control<G>)
 {
-    let mut c = Control::new(updates_per_second);
+    let mut c = Control::new(game, updates_per_second);
 
     loop {
         if c.exit_next_iteration {
@@ -36,7 +36,8 @@ pub fn game_loop<U, R>(updates_per_second: u32, mut update: U, mut render: R) ->
     return c;
 }
 
-pub struct Control {
+pub struct Control<G> {
+    pub game: G,
     pub updates_per_second: u32,
     pub exit_next_iteration: bool,
 
@@ -50,9 +51,10 @@ pub struct Control {
     current_instant: Instant,
 }
 
-impl Control {
-    pub fn new(updates_per_second: u32) -> Self {
+impl<G> Control<G> {
+    pub fn new(game: G, updates_per_second: u32) -> Self {
         Self {
+            game,
             updates_per_second,
             exit_next_iteration: false,
 

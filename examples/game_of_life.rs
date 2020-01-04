@@ -1,8 +1,7 @@
 use game_loop::game_loop;
-use std::cell::RefCell;
 
 fn main() {
-    let game = GameOfLife::new(12, 12);
+    let mut game = GameOfLife::new(12, 12);
 
     // Make some of the cells alive.
     game.set(5, 5);
@@ -11,11 +10,11 @@ fn main() {
     game.set(6, 6);
 
     // Run the game loop with 2 updates per second.
-    let g = game_loop(2, |_| {
-        game.update();
+    let g = game_loop(game, 2, |g| {
+        g.game.update();
     }, |g| {
         // Pass the blending factor (even though this example doesn't use it).
-        game.render(g.blending_factor());
+        g.game.render(g.blending_factor());
 
         // Exit after 10 seconds.
         if g.running_time() > 10.0 {
@@ -31,10 +30,8 @@ fn main() {
 }
 
 // A quick and dirty implementation of Conway's Game of Life.
-// This uses RefCell so it can be used in both the update and render closure.
-
 struct GameOfLife {
-    board: RefCell<Board>,
+    board: Board,
     width: usize,
     height: usize,
 }
@@ -43,17 +40,17 @@ type Board = Vec<Vec<bool>>;
 
 impl GameOfLife {
     fn new(width: usize, height: usize) -> Self {
-        let board = RefCell::new(vec![vec![false; width]; height]);
+        let board = vec![vec![false; width]; height];
 
         Self { board, width, height }
     }
 
-    fn set(&self, x: usize, y: usize) {
-        (*self.board.borrow_mut())[y][x] = true;
+    fn set(&mut self, x: usize, y: usize) {
+        self.board[y][x] = true;
     }
 
-    fn update(&self) {
-        *self.board.borrow_mut() = self.next_board();
+    fn update(&mut self) {
+        self.board = self.next_board();
     }
 
     fn next_board(&self) -> Board {
@@ -65,7 +62,7 @@ impl GameOfLife {
     }
 
     fn next_cell(&self, x: usize, y: usize) -> bool {
-        let cell = self.board.borrow()[y][x];
+        let cell = self.board[y][x];
         let count = self.alive_neighbors(x as isize, y as isize);
 
         count == 3 || (cell && count == 2)
@@ -93,7 +90,7 @@ impl GameOfLife {
         if x < 0 { return false; }
         if y < 0 { return false; }
 
-        *self.board.borrow()
+        *self.board
             .get(y as usize).unwrap_or(&vec![])
             .get(x as usize).unwrap_or(&false)
     }
@@ -101,7 +98,7 @@ impl GameOfLife {
     fn render(&self, _blending_factor: f64) {
         print!("{}[2J", 27 as char); // clear terminal
 
-        for row in self.board.borrow().iter() {
+        for row in self.board.iter() {
             for cell in row {
                 if *cell {
                     print!("X");
