@@ -117,5 +117,5 @@ fn it_provides_blending_factor_so_that_render_can_interpolate_between_frames() {
 fn approx_eq(actual: f64, expected: f64) {
     let delta = (actual - expected).abs();
 
-    assert!(delta < 0.001, "{} is not approximately {}", actual, expected);
+    assert!(delta < 0.002, "{} is not approximately {}", actual, expected);
 }
