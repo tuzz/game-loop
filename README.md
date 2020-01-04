@@ -29,12 +29,16 @@ updates there have been, etc. It also provides a `blending_factor` that you may
 use in your render function to interpolate frames and produce smoother
 animations. See the article above for more explanation.
 
+## Example
+
 There's a [Game of Life example](./examples/game_of_life.rs) that shows how to
 use the crate. You can run it with:
 
 ```sh
 cargo run --example game_of_life
 ```
+
+![Game of Life](./examples/game_of_life.gif)
 
 ## License
 
