@@ -1,42 +1,10 @@
-use std::time::Instant;
+#[cfg(not(target_arch = "wasm32"))] mod default_target;
+#[cfg(not(target_arch = "wasm32"))] pub use default_target::game_loop;
 
-pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, mut update: U, mut render: R) -> Control<G>
-    where U: FnMut(&mut Control<G>), R: FnMut(&mut Control<G>)
-{
-    let mut c = Control::new(game, updates_per_second);
+#[cfg(target_arch = "wasm32")] mod wasm_target;
+#[cfg(target_arch = "wasm32")] pub use wasm_target::game_loop;
 
-    loop {
-        if c.exit_next_iteration {
-            break;
-        }
-
-        c.current_instant = Instant::now();
-
-        let duration = c.current_instant.duration_since(c.previous_instant);
-        let elapsed = duration.as_secs_f64();
-
-        c.running_time += elapsed;
-        c.accumulated_time += elapsed;
-
-        while c.accumulated_time >= c.fixed_time_step {
-            update(&mut c);
-
-            c.accumulated_time -= c.fixed_time_step;
-            c.number_of_updates += 1;
-        }
-
-        c.blending_factor = c.accumulated_time / c.fixed_time_step;
-
-        render(&mut c);
-
-        c.number_of_renders += 1;
-        c.previous_instant = c.current_instant;
-    }
-
-    return c;
-}
-
-pub struct Control<G> {
+pub struct GameLoop<G, T: TimeTrait> {
     pub game: G,
     pub updates_per_second: u32,
     pub exit_next_iteration: bool,
@@ -47,11 +15,11 @@ pub struct Control<G> {
     running_time: f64,
     accumulated_time: f64,
     blending_factor: f64,
-    previous_instant: Instant,
-    current_instant: Instant,
+    previous_instant: T,
+    current_instant: T,
 }
 
-impl<G> Control<G> {
+impl<G, T: TimeTrait> GameLoop<G, T> {
     pub fn new(game: G, updates_per_second: u32) -> Self {
         Self {
             game,
@@ -64,9 +32,43 @@ impl<G> Control<G> {
             running_time: 0.0,
             accumulated_time: 0.0,
             blending_factor: 0.0,
-            previous_instant: Instant::now(),
-            current_instant: Instant::now(),
+            previous_instant: T::now(),
+            current_instant: T::now(),
         }
+    }
+
+    pub fn next_frame<U, R>(&mut self, mut update: U, mut render: R) -> bool
+        where U: FnMut(&mut GameLoop<G, T>),
+              R: FnMut(&mut GameLoop<G, T>),
+    {
+        let mut g = self;
+
+        if g.exit_next_iteration {
+            return false;
+        }
+
+        g.current_instant = T::now();
+
+        let elapsed = g.current_instant.sub(&g.previous_instant);
+
+        g.running_time += elapsed;
+        g.accumulated_time += elapsed;
+
+        while g.accumulated_time >= g.fixed_time_step {
+            update(&mut g);
+
+            g.accumulated_time -= g.fixed_time_step;
+            g.number_of_updates += 1;
+        }
+
+        g.blending_factor = g.accumulated_time / g.fixed_time_step;
+
+        render(&mut g);
+
+        g.number_of_renders += 1;
+        g.previous_instant = g.current_instant;
+
+        return true;
     }
 
     pub fn exit(&mut self) {
@@ -96,4 +98,9 @@ impl<G> Control<G> {
     pub fn blending_factor(&self) -> f64 {
         self.blending_factor
     }
+}
+
+pub trait TimeTrait : Copy {
+    fn now() -> Self;
+    fn sub(&self, other: &Self) -> f64;
 }

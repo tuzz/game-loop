@@ -1,6 +1,6 @@
 [package]
 name = "game-loop"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 edition = "2018"
 license = "MIT"
@@ -11,3 +11,13 @@ homepage = "https://crates.io/crates/game-loop"
 description = "A Rust crate that implements a frame-rate-independent game loop."
 keywords = ["game", "loop", "frame", "rate", "independent"]
 categories = ["game-development", "simulation", "rendering"]
+
+[target.wasm32-unknown-unknown.dependencies]
+wasm-bindgen = "0.2.56"
+
+[target.wasm32-unknown-unknown.dependencies.web-sys]
+version = "0.3.33"
+features = [
+  "Performance",
+  "Window",
+]
