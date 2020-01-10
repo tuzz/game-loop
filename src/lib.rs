@@ -7,6 +7,7 @@
 pub struct GameLoop<G, T: TimeTrait> {
     pub game: G,
     pub updates_per_second: u32,
+    pub max_frame_time: f64,
     pub exit_next_iteration: bool,
 
     fixed_time_step: f64,
@@ -20,10 +21,11 @@ pub struct GameLoop<G, T: TimeTrait> {
 }
 
 impl<G, T: TimeTrait> GameLoop<G, T> {
-    pub fn new(game: G, updates_per_second: u32) -> Self {
+    pub fn new(game: G, updates_per_second: u32, max_frame_time: f64) -> Self {
         Self {
             game,
             updates_per_second,
+            max_frame_time,
             exit_next_iteration: false,
 
             fixed_time_step: 1.0 / updates_per_second as f64,
@@ -49,7 +51,11 @@ impl<G, T: TimeTrait> GameLoop<G, T> {
 
         g.current_instant = T::now();
 
-        let elapsed = g.current_instant.sub(&g.previous_instant);
+        let mut elapsed = g.current_instant.sub(&g.previous_instant);
+
+        if elapsed > g.max_frame_time {
+            elapsed = g.max_frame_time;
+        }
 
         g.running_time += elapsed;
         g.accumulated_time += elapsed;

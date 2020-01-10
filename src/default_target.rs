@@ -1,11 +1,11 @@
 use std::time::Instant;
 use super::*;
 
-pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, mut update: U, mut render: R) -> GameLoop<G, Time>
+pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, max_frame_time: f64, mut update: U, mut render: R) -> GameLoop<G, Time>
     where U: FnMut(&mut GameLoop<G, Time>),
           R: FnMut(&mut GameLoop<G, Time>),
 {
-    let mut game_loop = GameLoop::new(game, updates_per_second);
+    let mut game_loop = GameLoop::new(game, updates_per_second, max_frame_time);
 
     while game_loop.next_frame(&mut update, &mut render) {}
 

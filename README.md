@@ -13,7 +13,7 @@ use game_loop::game_loop;
 fn main() {
   let game = YourGame::new();
 
-  game_loop(game, 240, |g| {
+  game_loop(game, 240, 0.1, |g| {
     g.game.your_update_function();
   }, |g| {
     g.game.your_render_function();
@@ -29,15 +29,23 @@ with [`std::thread::sleep`](https://doc.rust-lang.org/std/thread/fn.sleep.html)
 if you wish. This may be useful if vsync is enabled or to save power on mobile
 devices.
 
+The value `0.1` is the maximum frame time which serves as an _escape hatch_ if
+your functions can't keep up with 240 updates per second. Otherwise, your game
+would 'death spiral' falling further and further behind. For example, if your
+render function takes 0.5 seconds, only 24 updates would occur instead of 120.
+This slows your game down but that's better than crashing.
+
 The `g` closure argument lets you access your `game` state which can be anything
 you like. You can also access the game loop's running time, how many updates
 there have been, etc. It also provides a `blending_factor` that you may use in
 your render function to interpolate frames and produce smoother animations. See
 the article above for more explanation.
 
-In web environments, `game_loop` is asynchronous and returns immediately,
-otherwise it blocks until `g.exit()` is called. Other than that, the interface
-is exactly the same.
+In web environments, requestAnimationFrame only runs when the browser tab is
+active. Setting a maximum frame time ensures your game doesn't fall far behind
+on its updates and is effectively paused. Also, `game_loop` is asynchronous and
+returns immediately rather than blocking until `g.exit()` is called. Other than
+that, the interface is exactly the same.
 
 ## Example
 

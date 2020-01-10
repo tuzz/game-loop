@@ -2,12 +2,12 @@ use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::window;
 use super::*;
 
-pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, update: U, render: R)
+pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, max_frame_time: f64, update: U, render: R)
     where G: 'static,
           U: FnMut(&mut GameLoop<G, Time>) + 'static,
           R: FnMut(&mut GameLoop<G, Time>) + 'static,
 {
-    let game_loop = GameLoop::new(game, updates_per_second);
+    let game_loop = GameLoop::new(game, updates_per_second, max_frame_time);
 
     animation_frame(game_loop, update, render);
 }
