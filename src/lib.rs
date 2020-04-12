@@ -13,6 +13,7 @@ pub struct GameLoop<G, T: TimeTrait> {
     fixed_time_step: f64,
     number_of_updates: u32,
     number_of_renders: u32,
+    last_frame_time: f64,
     running_time: f64,
     accumulated_time: f64,
     blending_factor: f64,
@@ -36,6 +37,7 @@ impl<G, T: TimeTrait> GameLoop<G, T> {
             blending_factor: 0.0,
             previous_instant: T::now(),
             current_instant: T::now(),
+            last_frame_time: 0.0,
         }
     }
 
@@ -57,6 +59,7 @@ impl<G, T: TimeTrait> GameLoop<G, T> {
             elapsed = g.max_frame_time;
         }
 
+        g.last_frame_time = elapsed;
         g.running_time += elapsed;
         g.accumulated_time += elapsed;
 
@@ -93,6 +96,10 @@ impl<G, T: TimeTrait> GameLoop<G, T> {
         self.number_of_renders
     }
 
+    pub fn last_frame_time(&self) -> f64 {
+        self.last_frame_time
+    }
+
     pub fn running_time(&self) -> f64 {
         self.running_time
     }
@@ -103,6 +110,14 @@ impl<G, T: TimeTrait> GameLoop<G, T> {
 
     pub fn blending_factor(&self) -> f64 {
         self.blending_factor
+    }
+
+    pub fn previous_instant(&self) -> T {
+        self.previous_instant
+    }
+
+    pub fn current_instant(&self) -> T {
+        self.current_instant
     }
 }
 

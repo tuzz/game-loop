@@ -25,6 +25,7 @@ fn main() {
     // Use the 'g' variable to query the game loop after it finishes.
     println!("Exiting after {} seconds", g.running_time());
     println!("");
+    println!("Last frame time: {}", g.last_frame_time());
     println!("Number of updates: {}", g.number_of_updates());
     println!("Number of renders: {}", g.number_of_renders());
 }
