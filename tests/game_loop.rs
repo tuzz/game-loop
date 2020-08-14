@@ -53,7 +53,7 @@ fn it_provides_fixed_time_step_to_the_closures() {
 fn it_provides_number_of_updates_to_the_closures() {
     let mut i = 0;
 
-    game_loop(GAME, 100, 1.0, |g| {
+    game_loop(GAME, 100, 1.0, move |g| {
         if i == 0 { assert_eq!(g.number_of_updates(), 0); }
         if i == 1 { assert_eq!(g.number_of_updates(), 1); }
         if i == 2 { assert_eq!(g.number_of_updates(), 2); }
@@ -67,7 +67,7 @@ fn it_provides_number_of_updates_to_the_closures() {
 fn it_provides_number_of_renders_to_the_closures() {
     let mut i = 0;
 
-    game_loop(GAME, 100, 1.0, |_| {}, |g| {
+    game_loop(GAME, 100, 1.0, |_| {}, move |g| {
         if i == 0 { assert_eq!(g.number_of_renders(), 0); }
         if i == 1 { assert_eq!(g.number_of_renders(), 1); }
         if i == 2 { assert_eq!(g.number_of_renders(), 2); }
@@ -82,7 +82,7 @@ fn it_provides_number_of_renders_to_the_closures() {
 fn it_provides_running_time_to_the_closures() {
     let mut i = 0;
 
-    game_loop(GAME, 100, 1.0, |g| {
+    game_loop(GAME, 100, 1.0, move |g| {
         if i == 0 { approx_eq(g.running_time(), 0.01); }
         if i == 1 { approx_eq(g.running_time(), 0.02); }
         if i == 2 { approx_eq(g.running_time(), 0.03); }
@@ -96,7 +96,7 @@ fn it_provides_running_time_to_the_closures() {
 fn it_provides_accumulated_time_to_the_closures() {
     let mut i = 0;
 
-    game_loop(GAME, 100, 1.0, |g| {
+    game_loop(GAME, 100, 1.0, move |g| {
         if i == 0 { approx_eq(g.accumulated_time(), 0.01); }
         if i == 1 { approx_eq(g.accumulated_time(), 0.01); }
         if i == 2 { approx_eq(g.accumulated_time(), 0.01); }
@@ -128,7 +128,7 @@ fn it_calls_the_render_function_as_quickly_as_possible() {
 fn it_limits_the_maximum_frame_time_which_reduces_the_number_of_updates() {
     let mut i = 0;
 
-    let g = game_loop(GAME, 100, 0.1, |_| {}, |g| {
+    let g = game_loop(GAME, 100, 0.1, |_| {}, move |g| {
         if i == 0 { sleep(Duration::from_secs_f64(0.2)) };
         if i == 1 { g.exit() };
 

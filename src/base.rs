@@ -1,10 +1,11 @@
 use crate::*;
 
-pub struct GameLoop<G, T: TimeTrait> {
+pub struct GameLoop<G, T: TimeTrait, W> {
     pub game: G,
     pub updates_per_second: u32,
     pub max_frame_time: f64,
     pub exit_next_iteration: bool,
+    pub window: W,
 
     fixed_time_step: f64,
     number_of_updates: u32,
@@ -17,12 +18,13 @@ pub struct GameLoop<G, T: TimeTrait> {
     current_instant: T,
 }
 
-impl<G, T: TimeTrait> GameLoop<G, T> {
-    pub fn new(game: G, updates_per_second: u32, max_frame_time: f64) -> Self {
+impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
+    pub fn new(game: G, updates_per_second: u32, max_frame_time: f64, window: W) -> Self {
         Self {
             game,
             updates_per_second,
             max_frame_time,
+            window,
             exit_next_iteration: false,
 
             fixed_time_step: 1.0 / updates_per_second as f64,
@@ -38,8 +40,8 @@ impl<G, T: TimeTrait> GameLoop<G, T> {
     }
 
     pub fn next_frame<U, R>(&mut self, mut update: U, mut render: R) -> bool
-        where U: FnMut(&mut GameLoop<G, T>),
-              R: FnMut(&mut GameLoop<G, T>),
+        where U: FnMut(&mut GameLoop<G, T, W>),
+              R: FnMut(&mut GameLoop<G, T, W>),
     {
         let mut g = self;
 
