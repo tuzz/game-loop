@@ -148,6 +148,22 @@ fn it_provides_blending_factor_so_that_render_can_interpolate_between_frames() {
     });
 }
 
+#[test]
+fn it_can_re_measure_how_much_time_has_accumulated_mid_way_through_a_render() {
+    game_loop(GAME, 100, 1.0, |_| {}, |g| {
+        sleep(Duration::from_secs_f64(0.2));
+        g.re_accumulate();
+
+        approx_eq(g.running_time(), 0.2);
+        approx_eq(g.accumulated_time(), 0.2);
+
+        assert!(g.blending_factor() > 19.);
+        assert!(g.blending_factor() < 21.);
+
+        g.exit();
+    });
+}
+
 fn approx_eq(actual: f64, expected: f64) {
     let delta = (actual - expected).abs();
 

@@ -41,6 +41,12 @@ there have been, etc. It also provides a `blending_factor` that you may use in
 your render function to interpolate frames and produce smoother animations. See
 the article above for more explanation.
 
+By default, the amount of accumulated time since the last frame is measured
+immediately before your render function is called. However, you can call
+`g.re_accumulate()` right before you need to access `g.blending_factor()` for
+more precise timings. This is useful if your render function does work before
+it gets round to drawing, such as computing lighting.
+
 In web environments, requestAnimationFrame only runs when the browser tab is
 active. Setting a maximum frame time ensures your game doesn't fall far behind
 on its updates and is effectively paused. Also, `game_loop` is asynchronous and
@@ -48,8 +54,6 @@ returns immediately rather than blocking until `g.exit()` is called. Other than
 that, the interface is exactly the same.
 
 ## Windowing
-
-**New in version 0.6**
 
 The crate now supports running a frame-rate independent game loop inside a
 [winit](https://github.com/rust-windowing/winit) window. You can enable this

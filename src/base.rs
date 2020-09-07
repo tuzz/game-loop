@@ -78,6 +78,25 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
         return true;
     }
 
+    pub fn re_accumulate(&mut self) {
+        let mut g = self;
+
+        g.current_instant = T::now();
+
+        let prev_elapsed = g.last_frame_time;
+        let new_elapsed = g.current_instant.sub(&g.previous_instant);
+
+        let delta = new_elapsed - prev_elapsed;
+
+        // We don't update g.last_frame_time since this additional time in the
+        // render function is considered part of the current frame.
+
+        g.running_time += delta;
+        g.accumulated_time += delta;
+
+        g.blending_factor = g.accumulated_time / g.fixed_time_step;
+    }
+
     pub fn exit(&mut self) {
         self.exit_next_iteration = true;
     }
