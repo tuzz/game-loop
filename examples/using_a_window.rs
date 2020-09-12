@@ -1,8 +1,7 @@
 use game_loop::game_loop;
 
 // For convenience, game_loop re-exports winit so you don't need to add it as
-// an additional dependency of your crate. It uses a slightly older version than
-// latest since I couldn't get the latest version to compile on my mac.
+// an additional dependency of your crate.
 
 use game_loop::winit::event::{Event, WindowEvent};
 use game_loop::winit::event_loop::EventLoop;
