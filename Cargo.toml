@@ -1,6 +1,6 @@
 [package]
 name = "game-loop"
-version = "0.7.1"
+version = "0.7.2"
 authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 edition = "2018"
 license = "MIT"
@@ -13,10 +13,10 @@ keywords = ["game", "loop", "frame", "rate", "independent"]
 categories = ["game-development", "simulation", "rendering"]
 
 [target.wasm32-unknown-unknown.dependencies]
-wasm-bindgen = "0.2.56"
+wasm-bindgen = "0.2"
 
 [target.wasm32-unknown-unknown.dependencies.web-sys]
-version = "0.3.33"
+version = "0.3"
 features = [
   "Performance",
   "Window",
@@ -26,7 +26,7 @@ features = [
 window = ["winit"]
 
 [dependencies]
-winit = { version = "0.22.2", optional = true }
+winit = { version = "0.24", optional = true }
 
 [[example]]
 name = "using_a_window"
