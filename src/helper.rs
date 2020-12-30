@@ -22,6 +22,8 @@ mod helper {
 mod helper {
     use super::*;
     use web_sys::window;
+    use wasm_bindgen::JsCast;
+    use wasm_bindgen::closure::Closure;
 
     pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, max_frame_time: f64, update: U, render: R)
         where G: 'static,
@@ -33,10 +35,10 @@ mod helper {
         animation_frame(game_loop, update, render);
     }
 
-    fn animation_frame<G, U, R>(mut g: GameLoop<G, Time>, mut update: U, mut render: R)
+    fn animation_frame<G, U, R>(mut g: GameLoop<G, Time, ()>, mut update: U, mut render: R)
         where G: 'static,
-              U: FnMut(&mut GameLoop<G, Time>) + 'static,
-              R: FnMut(&mut GameLoop<G, Time>) + 'static,
+              U: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
+              R: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
     {
         if g.next_frame(&mut update, &mut render) {
             let next_frame = move || animation_frame(g, update, render);
