@@ -26,7 +26,7 @@ features = [
 window = ["winit"]
 
 [dependencies]
-winit = { version = "0.24", optional = true }
+winit = { version = "0.25", optional = true }
 
 [[example]]
 name = "using_a_window"
