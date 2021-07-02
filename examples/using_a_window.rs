@@ -13,13 +13,24 @@ fn main() {
 
     let game = Game::new();
 
-    game_loop(event_loop, window, game, 240, 0.1, |g| {
-        g.game.your_update_function();
-    }, |g| {
-        g.game.your_render_function(&g.window);
-    }, |g, event| {
-        if !g.game.your_window_handler(event) { g.exit(); }
-    });
+    game_loop(
+        event_loop,
+        window,
+        game,
+        240,
+        0.1,
+        |g| {
+            g.game.your_update_function();
+        },
+        |g| {
+            g.game.your_render_function(&g.window);
+        },
+        |g, event| {
+            if !g.game.your_window_handler(event) {
+                g.exit();
+            }
+        },
+    );
 }
 
 #[derive(Default)]
@@ -46,10 +57,10 @@ impl Game {
             Event::WindowEvent { event, .. } => match event {
                 WindowEvent::CloseRequested => {
                     return false;
-                },
-                _ => {},
+                }
+                _ => {}
             },
-            _ => {},
+            _ => {}
         }
 
         true

@@ -2,13 +2,20 @@ use crate::*;
 
 pub use helper::*;
 
-#[cfg(all(not(target_arch = "wasm32"), not(feature="window")))]
+#[cfg(all(not(target_arch = "wasm32"), not(feature = "window")))]
 mod helper {
     use super::*;
 
-    pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, max_frame_time: f64, mut update: U, mut render: R) -> GameLoop<G, Time, ()>
-        where U: FnMut(&mut GameLoop<G, Time, ()>),
-              R: FnMut(&mut GameLoop<G, Time, ()>),
+    pub fn game_loop<G, U, R>(
+        game: G,
+        updates_per_second: u32,
+        max_frame_time: f64,
+        mut update: U,
+        mut render: R,
+    ) -> GameLoop<G, Time, ()>
+    where
+        U: FnMut(&mut GameLoop<G, Time, ()>),
+        R: FnMut(&mut GameLoop<G, Time, ()>),
     {
         let mut game_loop = GameLoop::new(game, updates_per_second, max_frame_time, ());
 
@@ -18,17 +25,23 @@ mod helper {
     }
 }
 
-#[cfg(all(target_arch = "wasm32", not(feature="window")))]
+#[cfg(all(target_arch = "wasm32", not(feature = "window")))]
 mod helper {
     use super::*;
-    use web_sys::window;
-    use wasm_bindgen::JsCast;
     use wasm_bindgen::closure::Closure;
+    use wasm_bindgen::JsCast;
+    use web_sys::window;
 
-    pub fn game_loop<G, U, R>(game: G, updates_per_second: u32, max_frame_time: f64, update: U, render: R)
-        where G: 'static,
-              U: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
-              R: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
+    pub fn game_loop<G, U, R>(
+        game: G,
+        updates_per_second: u32,
+        max_frame_time: f64,
+        update: U,
+        render: R,
+    ) where
+        G: 'static,
+        U: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
+        R: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
     {
         let game_loop = GameLoop::new(game, updates_per_second, max_frame_time, ());
 
@@ -36,9 +49,10 @@ mod helper {
     }
 
     fn animation_frame<G, U, R>(mut g: GameLoop<G, Time, ()>, mut update: U, mut render: R)
-        where G: 'static,
-              U: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
-              R: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
+    where
+        G: 'static,
+        U: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
+        R: FnMut(&mut GameLoop<G, Time, ()>) + 'static,
     {
         if g.next_frame(&mut update, &mut render) {
             let next_frame = move || animation_frame(g, update, render);
@@ -50,7 +64,7 @@ mod helper {
     }
 }
 
-#[cfg(feature="window")]
+#[cfg(feature = "window")]
 mod helper {
     use super::*;
     use winit::event::Event;
@@ -59,11 +73,20 @@ mod helper {
 
     pub use winit;
 
-    pub fn game_loop<G, U, R, H>(event_loop: EventLoop<()>, window: Window, game: G, updates_per_second: u32, max_frame_time: f64, mut update: U, mut render: R, mut handler: H)
-        where G: 'static,
-              U: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
-              R: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
-              H: FnMut(&mut GameLoop<G, Time, Window>, Event<()>) + 'static,
+    pub fn game_loop<G, U, R, H>(
+        event_loop: EventLoop<()>,
+        window: Window,
+        game: G,
+        updates_per_second: u32,
+        max_frame_time: f64,
+        mut update: U,
+        mut render: R,
+        mut handler: H,
+    ) where
+        G: 'static,
+        U: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
+        R: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
+        H: FnMut(&mut GameLoop<G, Time, Window>, Event<()>) + 'static,
     {
         let mut game_loop = GameLoop::new(game, updates_per_second, max_frame_time, window);
 
@@ -75,10 +98,10 @@ mod helper {
                     if !game_loop.next_frame(&mut update, &mut render) {
                         *control_flow = ControlFlow::Exit;
                     }
-                },
+                }
                 Event::MainEventsCleared => {
                     game_loop.window.request_redraw();
-                },
+                }
                 event => {
                     handler(&mut game_loop, event);
                 }
