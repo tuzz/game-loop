@@ -59,7 +59,7 @@ mod helper {
 
     pub use winit;
 
-    pub fn game_loop<G, U, R, H>(event_loop: EventLoop<()>, window: Window, game: G, updates_per_second: u32, max_frame_time: f64, mut update: U, mut render: R, mut handler: H)
+    pub fn game_loop<G, U, R, H>(event_loop: EventLoop<()>, window: Window, game: G, updates_per_second: u32, max_frame_time: f64, mut update: U, mut render: R, mut handler: H) -> !
         where G: 'static,
               U: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
               R: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
@@ -83,6 +83,6 @@ mod helper {
                     handler(&mut game_loop, event);
                 }
             }
-        });
+        })
     }
 }
