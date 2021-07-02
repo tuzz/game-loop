@@ -40,8 +40,9 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
     }
 
     pub fn next_frame<U, R>(&mut self, mut update: U, mut render: R) -> bool
-        where U: FnMut(&mut GameLoop<G, T, W>),
-              R: FnMut(&mut GameLoop<G, T, W>),
+    where
+        U: FnMut(&mut GameLoop<G, T, W>),
+        R: FnMut(&mut GameLoop<G, T, W>),
     {
         let mut g = self;
 
