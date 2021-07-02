@@ -82,7 +82,8 @@ mod helper {
         mut update: U,
         mut render: R,
         mut handler: H,
-    ) where
+    ) -> !
+    where
         G: 'static,
         U: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
         R: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
@@ -106,6 +107,6 @@ mod helper {
                     handler(&mut game_loop, event);
                 }
             }
-        });
+        })
     }
 }
