@@ -167,5 +167,5 @@ fn it_can_re_measure_how_much_time_has_accumulated_mid_way_through_a_render() {
 fn approx_eq(actual: f64, expected: f64) {
     let delta = (actual - expected).abs();
 
-    assert!(delta < 0.005, "{} is not approximately {}", actual, expected);
+    assert!(delta < 0.01, "{} is not approximately {}", actual, expected);
 }
