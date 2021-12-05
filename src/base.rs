@@ -101,6 +101,11 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
         self.exit_next_iteration = true;
     }
 
+    pub fn set_updates_per_second(&mut self, new_updates_per_second: u32) {
+        self.updates_per_second = new_updates_per_second;
+        self.fixed_time_step = 1.0 / new_updates_per_second as f64;
+    }
+
     pub fn fixed_time_step(&self) -> f64 {
         self.fixed_time_step
     }

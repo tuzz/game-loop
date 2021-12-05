@@ -10,7 +10,11 @@ fn main() {
     game.set(6, 6);
 
     // Run the game loop with 2 updates per second.
-    let g = game_loop(game, 2, 1.0, |g| {
+    let g  = game_loop(game, 2, 1.0, |g| {
+        if g.number_of_updates() == 10 {
+            g.set_updates_per_second(100);
+        }
+
         g.game.update();
     }, |g| {
         // Pass the blending factor (even though this example doesn't use it).
