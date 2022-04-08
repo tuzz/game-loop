@@ -78,6 +78,7 @@ mod helper {
                     }
                 },
                 Event::MainEventsCleared => {
+                    handler(&mut game_loop, Event::MainEventsCleared);
                     game_loop.window.request_redraw();
                 },
                 event => {
