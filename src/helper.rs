@@ -71,6 +71,9 @@ mod helper {
         event_loop.run(move |event, _, control_flow| {
             *control_flow = ControlFlow::Poll;
 
+            // Forward events to existing handlers.
+            handler(&mut game_loop, event);
+
             match event {
                 Event::RedrawRequested(_) => {
                     if !game_loop.next_frame(&mut update, &mut render) {
@@ -80,9 +83,7 @@ mod helper {
                 Event::MainEventsCleared => {
                     game_loop.window.request_redraw();
                 },
-                event => {
-                    handler(&mut game_loop, event);
-                }
+                _ => {},
             }
         })
     }
