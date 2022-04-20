@@ -63,7 +63,7 @@ mod helper {
         where G: 'static,
               U: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
               R: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
-              H: FnMut(&mut GameLoop<G, Time, Window>, Event<'_, T>) + 'static,
+              H: FnMut(&mut GameLoop<G, Time, Window>, &Event<'_, T>) + 'static,
               T: 'static,
     {
         let mut game_loop = GameLoop::new(game, updates_per_second, max_frame_time, window);
@@ -72,7 +72,7 @@ mod helper {
             *control_flow = ControlFlow::Poll;
 
             // Forward events to existing handlers.
-            handler(&mut game_loop, event);
+            handler(&mut game_loop, &event);
 
             match event {
                 Event::RedrawRequested(_) => {
