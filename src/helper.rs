@@ -53,7 +53,7 @@ mod helper {
 #[cfg(feature="window")]
 mod helper {
     use super::*;
-    use winit::event::Event;
+    use winit::event::{Event, WindowEvent};
     use winit::event_loop::{ControlFlow, EventLoop};
     use winit::window::Window;
 
@@ -83,6 +83,9 @@ mod helper {
                 Event::MainEventsCleared => {
                     game_loop.window.request_redraw();
                 },
+                Event::WindowEvent { event, .. } => if let WindowEvent::Occluded(occluded) = event {
+                    game_loop.occluded = occluded;
+                }
                 _ => {},
             }
         })

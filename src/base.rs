@@ -1,4 +1,6 @@
 use crate::*;
+use std::time::Duration;
+use std::thread::sleep;
 
 pub struct GameLoop<G, T: TimeTrait, W> {
     pub game: G,
@@ -6,6 +8,7 @@ pub struct GameLoop<G, T: TimeTrait, W> {
     pub max_frame_time: f64,
     pub exit_next_iteration: bool,
     pub window: W,
+    pub occluded: bool,
 
     fixed_time_step: f64,
     number_of_updates: u32,
@@ -26,6 +29,7 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
             max_frame_time,
             window,
             exit_next_iteration: false,
+            occluded: false,
 
             fixed_time_step: 1.0 / updates_per_second as f64,
             number_of_updates: 0,
@@ -61,18 +65,28 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
         g.running_time += elapsed;
         g.accumulated_time += elapsed;
 
-        while g.accumulated_time >= g.fixed_time_step {
+        if g.accumulated_time < g.fixed_time_step && g.occluded {
+            sleep(Duration::from_secs_f64(g.fixed_time_step - g.accumulated_time));
             update(&mut g);
 
             g.accumulated_time -= g.fixed_time_step;
             g.number_of_updates += 1;
+        } else {
+            while g.accumulated_time >= g.fixed_time_step {
+                update(&mut g);
+
+                g.accumulated_time -= g.fixed_time_step;
+                g.number_of_updates += 1;
+            }
         }
 
         g.blending_factor = g.accumulated_time / g.fixed_time_step;
 
-        render(&mut g);
+        if !g.occluded {
+            render(&mut g);
+            g.number_of_renders += 1;
+        }
 
-        g.number_of_renders += 1;
         g.previous_instant = g.current_instant;
 
         return true;
