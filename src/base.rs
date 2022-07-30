@@ -1,7 +1,4 @@
 use crate::*;
-use std::time::Duration;
-use std::thread::sleep;
-
 pub struct GameLoop<G, T: TimeTrait, W> {
     pub game: G,
     pub updates_per_second: u32,
@@ -64,9 +61,12 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
         g.last_frame_time = elapsed;
         g.running_time += elapsed;
         g.accumulated_time += elapsed;
+        if g.accumulated_time < g.fixed_time_step && g.occluded && cfg!(not(target_arch = "wasm32")) {
+            #[cfg(not(target_arch = "wasm32"))]
+            std::thread::sleep(std::time::Duration::from_secs_f64(
+                g.fixed_time_step - g.accumulated_time,
+            ));
 
-        if g.accumulated_time < g.fixed_time_step && g.occluded {
-            sleep(Duration::from_secs_f64(g.fixed_time_step - g.accumulated_time));
             update(&mut g);
 
             g.accumulated_time -= g.fixed_time_step;
