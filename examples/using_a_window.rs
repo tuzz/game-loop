@@ -41,7 +41,7 @@ impl Game {
     }
 
     // A very simple handler that returns false when CloseRequested is detected.
-    pub fn your_window_handler(&self, event: Event<()>) -> bool {
+    pub fn your_window_handler(&self, event: &Event<()>) -> bool {
         match event {
             Event::WindowEvent { event, .. } => match event {
                 WindowEvent::CloseRequested => {
