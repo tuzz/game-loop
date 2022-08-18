@@ -27,7 +27,12 @@ window = ["winit"]
 
 [dependencies]
 winit = { version = "0.26", optional = true }
+tao = { version = "0.13", optional = true }
 
 [[example]]
 name = "using_a_window"
 required-features = ["window"]
+
+[[example]]
+name = "using_tao"
+required-features = ["tao"]

@@ -122,6 +122,17 @@ cargo run --example using_a_window --features window
 
 ![Using a Window](./examples/using_a_window.png)
 
+## Example 3: Using Tao
+
+There's an [example using `tao`](./examples/using_tao.rs) that shows how to
+use the crate alongside a tao window with a native menubar. You can run it with:
+
+```sh
+cargo run --example using_tao --features tao
+```
+
+![Using tao](./examples/using_tao.png)
+
 ## License
 
 MIT
