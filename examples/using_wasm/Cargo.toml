@@ -1,0 +1,35 @@
+[package]
+name = "using_wasm"
+description = "Based on github.com/tuzz/minimal-rust-wasm"
+repository = "https://github.com/tuzz/game-loop/examples/using_wasm"
+version = "0.1.0"
+license = "MIT"
+authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
+edition = "2018"
+
+[profile.dev]
+opt-level = 3
+
+[profile.release]
+lto = true
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-O4"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+path = "src/main.rs"
+
+[dependencies]
+wasm-bindgen = "*"
+game-loop = { path = "../.." }
+
+[dependencies.web-sys]
+version = "*"
+features = [
+  'Document',
+  'Element',
+  'HtmlElement',
+  'Node',
+  'Window',
+]

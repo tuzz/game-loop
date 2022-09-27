@@ -120,7 +120,18 @@ use the crate alongside a winit window. You can run it with:
 cargo run --example using_winit --features winit
 ```
 
-![Using Winit](./examples/using_winit.png)
+## Example 3: Using WASM
+
+There's a [wasm example](./examples/using_wasm/src/main.rs) that shows how to
+use the crate in a web browser. You can run it with:
+
+```sh
+cd examples/using_wasm && ./run_example
+```
+
+Then open [localhost:8000](http://localhost:8000) in your web browser.
+
+![Using WASM](./examples/using_wasm.png)
 
 ## License
 
