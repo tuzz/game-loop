@@ -22,12 +22,9 @@ features = [
   "Window",
 ]
 
-[features]
-window = ["winit"]
-
 [dependencies]
 winit = { version = "0.27", optional = true }
 
 [[example]]
-name = "using_a_window"
-required-features = ["window"]
+name = "using_winit"
+required-features = ["winit"]

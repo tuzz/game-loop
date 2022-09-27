@@ -2,7 +2,7 @@ use crate::*;
 
 pub use helper::*;
 
-#[cfg(all(not(target_arch = "wasm32"), not(feature="window")))]
+#[cfg(all(not(target_arch = "wasm32"), not(feature="winit")))]
 mod helper {
     use super::*;
 
@@ -18,7 +18,7 @@ mod helper {
     }
 }
 
-#[cfg(all(target_arch = "wasm32", not(feature="window")))]
+#[cfg(all(target_arch = "wasm32", not(feature="winit")))]
 mod helper {
     use super::*;
     use web_sys::window;
@@ -50,7 +50,7 @@ mod helper {
     }
 }
 
-#[cfg(feature="window")]
+#[cfg(feature="winit")]
 mod helper {
     use super::*;
     use winit::event::Event;

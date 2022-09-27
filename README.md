@@ -61,7 +61,7 @@ feature in your Cargo.toml:
 
 ```toml
 [dependencies]
-game_loop = { version = "*", features = ["window"] }
+game_loop = { version = "*", features = ["winit"] }
 ```
 
 With this feature enabled, the interface is a little bit different:
@@ -111,16 +111,16 @@ cargo run --example game_of_life
 
 ![Game of Life](./examples/game_of_life.gif)
 
-## Example 2: Using a Window
+## Example 2: Using a Winit Window
 
-There's a [windowing example](./examples/using_a_window.rs) that shows how to
+There's a [winit example](./examples/using_winit.rs) that shows how to
 use the crate alongside a winit window. You can run it with:
 
 ```sh
-cargo run --example using_a_window --features window
+cargo run --example using_winit --features winit
 ```
 
-![Using a Window](./examples/using_a_window.png)
+![Using Winit](./examples/using_winit.png)
 
 ## License
 
