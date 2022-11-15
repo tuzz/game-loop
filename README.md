@@ -24,10 +24,7 @@ fn main() {
 The value `240` is the number of updates per second. It is _not_ the frame rate.
 In web environments, the frame rate is controlled by
 [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame),
-otherwise render is called as quickly as possible, though you can slow it down
-with [`std::thread::sleep`](https://doc.rust-lang.org/std/thread/fn.sleep.html)
-if you wish. This may be useful if vsync is enabled or to save power on mobile
-devices.
+otherwise render is called as quickly as possible.
 
 The value `0.1` is the maximum frame time which serves as an _escape hatch_ if
 your functions can't keep up with 240 updates per second. Otherwise, your game
@@ -56,23 +53,18 @@ that, the interface is exactly the same.
 ## Windowing
 
 The crate now supports running a frame-rate independent game loop inside a
-[winit](https://github.com/rust-windowing/winit) window. You can enable this
-feature in your Cargo.toml:
+[Winit](https://github.com/rust-windowing/winit) or
+[TAO](https://github.com/tauri-apps/tao) window.
+You can enable this in your Cargo.toml:
 
 ```toml
 [dependencies]
-game_loop = { version = "*", features = ["window"] }
+game_loop = { version = "*", features = ["winit"] } # or tao
 ```
 
-With this feature enabled, the interface is a little bit different:
+With one of these features enabled, the interface is a little bit different:
 
 ```rust
-use game_loop::game_loop;
-
-use game_loop::winit::event::{Event, WindowEvent};
-use game_loop::winit::event_loop::EventLoop;
-use game_loop::winit::window::{Window, WindowBuilder};
-
 fn main() {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
@@ -89,15 +81,13 @@ fn main() {
 }
 ```
 
-Notably, the `game_loop` function now takes a winit
-[`EventLoop`](https://docs.rs/winit/0.21.0/winit/event_loop/struct.EventLoop.html)
-and [`Window`](https://docs.rs/winit/0.21.0/winit/window/struct.Window.html) and
-an additional closure to handle window events such as resizing the window or
-closing it. The window can be accessed through the `g` closure argument. This is
-so you can bind a graphics context to it or set its title, etc.
+Notably, the `game_loop` function now takes `event_loop` and `window` arguments
+and a third closure for handling window events such as resizing or closing. The
+window can be accessed through the `g` closure argument. This is so you can
+bind a graphics context to it or set its title, etc.
 
 Winit also supports wasm so in theory it should Just Work, but I haven't tested
-it yet. Please refer to [winit documentation](https://github.com/rust-windowing/winit#platform-specific-usage)
+it. Please refer to [winit documentation](https://github.com/rust-windowing/winit#platform-specific-usage)
 for more information.
 
 ## Example 1: Game of Life
@@ -111,16 +101,40 @@ cargo run --example game_of_life
 
 ![Game of Life](./examples/game_of_life.gif)
 
-## Example 2: Using a Window
+## Example 2: Using WASM
 
-There's a [windowing example](./examples/using_a_window.rs) that shows how to
+There's a [wasm example](./examples/using_wasm/src/main.rs) that shows how to
+use the crate in a web browser. You can run it with:
+
+```sh
+cd examples/using_wasm && ./run_example
+```
+
+Then open [localhost:8000](http://localhost:8000) in your web browser.
+
+![Using WASM](./examples/using_wasm.png)
+
+## Example 3: Using a Winit Window
+
+There's a [Winit example](./examples/using_winit.rs) that shows how to
 use the crate alongside a winit window. You can run it with:
 
 ```sh
-cargo run --example using_a_window --features window
+cargo run --example using_winit --features winit
 ```
 
-![Using a Window](./examples/using_a_window.png)
+![Using Winit](./examples/using_winit.png)
+
+## Example 4: Using a TAO Window
+
+There's a [TAO example](./examples/using_tao.rs) that shows how to use the
+crate alongside a TAO window with a native menu bar. You can run it with:
+
+```sh
+cargo run --example using_tao --features tao
+```
+
+![Using TAO](./examples/using_tao.png)
 
 ## License
 

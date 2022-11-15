@@ -1,0 +1,11 @@
+#!/bin/bash
+
+rustup target add wasm32-unknown-unknown                                    && \
+                                                                               \
+cargo install wasm-pack                                                     && \
+cargo install live-server                                                   && \
+                                                                               \
+wasm-pack build --dev --target no-modules --out-dir target --out-name index && \
+mv target/index_bg.wasm target/index.wasm                                   && \
+                                                                               \
+live-server -h 0.0.0.0

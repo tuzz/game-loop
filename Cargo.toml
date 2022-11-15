@@ -1,6 +1,6 @@
 [package]
 name = "game-loop"
-version = "0.9.1"
+version = "0.10.0"
 authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 edition = "2018"
 license = "MIT"
@@ -22,12 +22,14 @@ features = [
   "Window",
 ]
 
-[features]
-window = ["winit"]
-
 [dependencies]
-winit = { version = "0.26", optional = true }
+winit = { version = "0.27", optional = true }
+tao = { version = "0.14", optional = true }
 
 [[example]]
-name = "using_a_window"
-required-features = ["window"]
+name = "using_winit"
+required-features = ["winit"]
+
+[[example]]
+name = "using_tao"
+required-features = ["tao"]

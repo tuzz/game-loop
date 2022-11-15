@@ -1,15 +1,22 @@
 use game_loop::game_loop;
 
-// For convenience, game_loop re-exports winit so you don't need to add it as
+// For convenience, game_loop re-exports tao so you don't need to add it as
 // an additional dependency of your crate.
 
-use game_loop::winit::event::{Event, WindowEvent};
-use game_loop::winit::event_loop::EventLoop;
-use game_loop::winit::window::{Window, WindowBuilder};
+use game_loop::tao::event::{Event, WindowEvent};
+use game_loop::tao::event_loop::EventLoop;
+use game_loop::tao::menu::{MenuBar, MenuItem};
+use game_loop::tao::window::{Window, WindowBuilder};
 
 fn main() {
+    let mut file_menu = MenuBar::new();
+    file_menu.add_native_item(MenuItem::Quit);
+
+    let mut menu = MenuBar::new();
+    menu.add_submenu("File", true, file_menu);
+
     let event_loop = EventLoop::new();
-    let window = WindowBuilder::new().build(&event_loop).unwrap();
+    let window = WindowBuilder::new().with_menu(menu).build(&event_loop).unwrap();
 
     let game = Game::new();
 
@@ -41,15 +48,15 @@ impl Game {
     }
 
     // A very simple handler that returns false when CloseRequested is detected.
-    pub fn your_window_handler(&self, event: Event<()>) -> bool {
+    pub fn your_window_handler(&self, event: &Event<()>) -> bool {
         match event {
             Event::WindowEvent { event, .. } => match event {
                 WindowEvent::CloseRequested => {
                     return false;
-                },
-                _ => {},
+                }
+                _ => {}
             },
-            _ => {},
+            _ => {}
         }
 
         true

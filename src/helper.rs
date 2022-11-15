@@ -2,7 +2,7 @@ use crate::*;
 
 pub use helper::*;
 
-#[cfg(all(not(target_arch = "wasm32"), not(feature="window")))]
+#[cfg(all(not(target_arch = "wasm32"), not(feature="winit"), not(feature="tao")))]
 mod helper {
     use super::*;
 
@@ -18,7 +18,7 @@ mod helper {
     }
 }
 
-#[cfg(all(target_arch = "wasm32", not(feature="window")))]
+#[cfg(all(target_arch = "wasm32"))]
 mod helper {
     use super::*;
     use web_sys::window;
@@ -50,7 +50,7 @@ mod helper {
     }
 }
 
-#[cfg(feature="window")]
+#[cfg(feature="winit")]
 mod helper {
     use std::sync::Arc;
     use super::*;
@@ -85,6 +85,45 @@ mod helper {
                     game_loop.window.request_redraw();
                 },
                 _ => {},
+            }
+        })
+    }
+}
+
+#[cfg(all(feature = "tao"))]
+mod helper {
+    use super::*;
+    use tao::event::Event;
+    use tao::event_loop::{ControlFlow, EventLoop};
+    use tao::window::Window;
+
+    pub use tao;
+
+    pub fn game_loop<G, U, R, H, T>(event_loop: EventLoop<T>, window: Window, game: G, updates_per_second: u32, max_frame_time: f64, mut update: U, mut render: R, mut handler: H) -> !
+        where G: 'static,
+              U: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
+              R: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
+              H: FnMut(&mut GameLoop<G, Time, Window>, &Event<'_, T>) + 'static,
+              T: 'static,
+    {
+        let mut game_loop = GameLoop::new(game, updates_per_second, max_frame_time, window);
+
+        event_loop.run(move |event, _, control_flow| {
+            *control_flow = ControlFlow::Poll;
+
+            // Forward events to existing handlers.
+            handler(&mut game_loop, &event);
+
+            match event {
+                Event::RedrawRequested(_) => {
+                    if !game_loop.next_frame(&mut update, &mut render) {
+                        *control_flow = ControlFlow::Exit;
+                    }
+                }
+                Event::MainEventsCleared => {
+                    game_loop.window.request_redraw();
+                }
+                _ => {}
             }
         })
     }
