@@ -18,7 +18,7 @@ mod helper {
     }
 }
 
-#[cfg(all(target_arch = "wasm32"))]
+#[cfg(all(target_arch = "wasm32", not(feature = "winit")))]
 mod helper {
     use super::*;
     use web_sys::window;
