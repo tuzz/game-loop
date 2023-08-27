@@ -112,7 +112,7 @@ use the crate in a web browser. You can run it with:
 cd examples/using_wasm && ./run_example
 ```
 
-Then open [localhost:8000](http://localhost:8000) in your web browser.
+Then open [localhost:8000](http://localhost:8000) in your web browser. The counters just tick up on the web page:
 
 ![Using WASM](./examples/using_wasm.png)
 
@@ -125,6 +125,8 @@ use the crate alongside a winit window. You can run it with:
 cargo run --example using_winit --features winit
 ```
 
+The counters just tick up on the window title:
+
 ![Using Winit](./examples/using_winit.png)
 
 ## Example 4: Using a TAO Window
@@ -135,6 +137,8 @@ crate alongside a TAO window with a native menu bar. You can run it with:
 ```sh
 cargo run --example using_tao --features tao
 ```
+
+The counters just tick up on the window title:
 
 ![Using TAO](./examples/using_tao.png)
 

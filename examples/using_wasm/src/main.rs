@@ -14,7 +14,8 @@ pub fn main() {
 
 struct Game {
     span: web_sys::Element,
-    counter: u32,
+    num_updates: u32,
+    num_renders: u32,
 }
 
 impl Game {
@@ -26,14 +27,15 @@ impl Game {
 
         body.append_child(&span).unwrap();
 
-        Self { span, counter: 0 }
+        Self { span, num_updates: 0, num_renders: 0 }
     }
 
     pub fn your_update_function(&mut self) {
-        self.counter += 1;
+        self.num_updates += 1;
     }
 
-    pub fn your_render_function(&self) {
-        self.span.set_inner_html(&format!("Counter: {}", self.counter));
+    pub fn your_render_function(&mut self) {
+        self.num_renders += 1;
+        self.span.set_inner_html(&format!("num_updates: {}, num_renders: {}", self.num_updates, self.num_renders));
     }
 }

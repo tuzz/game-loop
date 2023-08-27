@@ -27,7 +27,8 @@ fn main() {
 
 #[derive(Default)]
 struct Game {
-    counter: u32,
+    num_updates: u32,
+    num_renders: u32,
 }
 
 impl Game {
@@ -36,11 +37,12 @@ impl Game {
     }
 
     pub fn your_update_function(&mut self) {
-        self.counter += 1;
+        self.num_updates += 1;
     }
 
-    pub fn your_render_function(&self, window: &Window) {
-        window.set_title(&format!("Counter: {}", self.counter));
+    pub fn your_render_function(&mut self, window: &Window) {
+        self.num_renders += 1;
+        window.set_title(&format!("num_updates: {}, num_renders: {}", self.num_updates, self.num_renders));
     }
 
     // A very simple handler that returns false when CloseRequested is detected.
