@@ -67,7 +67,9 @@ With one of these features enabled, the interface is a little bit different:
 ```rust
 fn main() {
     let event_loop = EventLoop::new();
+
     let window = WindowBuilder::new().build(&event_loop).unwrap();
+    let window = Arc::new(window);
 
     let game = YourGame::new();
 

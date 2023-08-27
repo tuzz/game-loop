@@ -79,7 +79,7 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
     }
 
     pub fn re_accumulate(&mut self) {
-        let mut g = self;
+        let g = self;
 
         g.current_instant = T::now();
 
