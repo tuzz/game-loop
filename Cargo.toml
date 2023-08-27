@@ -24,7 +24,7 @@ features = [
 
 [dependencies]
 winit = { version = "0.28", optional = true }
-tao = { version = "0.18", optional = true }
+tao = { version = "0.21", optional = true }
 
 [[example]]
 name = "using_winit"
