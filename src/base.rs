@@ -6,6 +6,7 @@ pub struct GameLoop<G, T: TimeTrait, W> {
     pub max_frame_time: f64,
     pub exit_next_iteration: bool,
     pub window: W,
+    pub window_occluded: bool,
 
     fixed_time_step: f64,
     number_of_updates: u32,
@@ -25,6 +26,7 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
             updates_per_second,
             max_frame_time,
             window,
+            window_occluded: false,
             exit_next_iteration: false,
 
             fixed_time_step: 1.0 / updates_per_second as f64,
@@ -65,9 +67,13 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
 
         g.blending_factor = g.accumulated_time / g.fixed_time_step;
 
-        render(g);
+        if g.window_occluded && T::supports_sleep() {
+            T::sleep(g.fixed_time_step);
+        } else {
+            render(g);
+            g.number_of_renders += 1;
+        }
 
-        g.number_of_renders += 1;
         g.previous_instant = g.current_instant;
 
         true

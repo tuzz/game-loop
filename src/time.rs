@@ -1,6 +1,8 @@
 pub trait TimeTrait : Copy {
     fn now() -> Self;
     fn sub(&self, other: &Self) -> f64;
+    fn supports_sleep() -> bool;
+    fn sleep(seconds: f64);
 }
 
 pub use time::*;
@@ -8,7 +10,8 @@ pub use time::*;
 #[cfg(not(target_arch = "wasm32"))]
 mod time {
     use super::*;
-    use std::time::Instant;
+    use std::time::{Instant, Duration};
+    use std::thread::sleep;
 
     #[derive(Copy, Clone)]
     pub struct Time(Instant);
@@ -20,6 +23,14 @@ mod time {
 
         fn sub(&self, other: &Self) -> f64 {
             self.0.duration_since(other.0).as_secs_f64()
+        }
+
+        fn supports_sleep() -> bool {
+            true
+        }
+
+        fn sleep(seconds: f64) {
+            sleep(Duration::from_secs_f64(seconds));
         }
     }
 }
@@ -39,6 +50,14 @@ mod time {
 
         fn sub(&self, other: &Self) -> f64 {
             self.0 - other.0
+        }
+
+        fn supports_sleep() -> bool {
+            false
+        }
+
+        fn sleep(_seconds: f64) {
+            unimplemented!("Not supported for WASM.");
         }
     }
 }

@@ -54,7 +54,7 @@ mod helper {
 mod helper {
     use std::sync::Arc;
     use super::*;
-    use winit::event::Event;
+    use winit::event::{Event, WindowEvent};
     use winit::event_loop::{ControlFlow, EventLoop};
     use winit::window::Window;
 
@@ -83,6 +83,9 @@ mod helper {
                 },
                 Event::MainEventsCleared => {
                     game_loop.window.request_redraw();
+                },
+                Event::WindowEvent { event: WindowEvent::Occluded(occluded), .. } => {
+                    game_loop.window_occluded = occluded;
                 },
                 _ => {},
             }
@@ -120,11 +123,11 @@ mod helper {
                     if !game_loop.next_frame(&mut update, &mut render) {
                         *control_flow = ControlFlow::Exit;
                     }
-                }
+                },
                 Event::MainEventsCleared => {
                     game_loop.window.request_redraw();
-                }
-                _ => {}
+                },
+                _ => {},
             }
         })
     }
