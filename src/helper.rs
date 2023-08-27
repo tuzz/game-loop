@@ -90,7 +90,7 @@ mod helper {
     }
 }
 
-#[cfg(all(feature = "tao"))]
+#[cfg(feature = "tao")]
 mod helper {
     use super::*;
     use tao::event::Event;

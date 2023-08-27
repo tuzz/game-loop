@@ -43,26 +43,21 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
         where U: FnMut(&mut GameLoop<G, T, W>),
               R: FnMut(&mut GameLoop<G, T, W>),
     {
-        let mut g = self;
+        let g = self;
 
-        if g.exit_next_iteration {
-            return false;
-        }
+        if g.exit_next_iteration { return false; }
 
         g.current_instant = T::now();
 
         let mut elapsed = g.current_instant.sub(&g.previous_instant);
-
-        if elapsed > g.max_frame_time {
-            elapsed = g.max_frame_time;
-        }
+        if elapsed > g.max_frame_time { elapsed = g.max_frame_time; }
 
         g.last_frame_time = elapsed;
         g.running_time += elapsed;
         g.accumulated_time += elapsed;
 
         while g.accumulated_time >= g.fixed_time_step {
-            update(&mut g);
+            update(g);
 
             g.accumulated_time -= g.fixed_time_step;
             g.number_of_updates += 1;
@@ -70,12 +65,12 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
 
         g.blending_factor = g.accumulated_time / g.fixed_time_step;
 
-        render(&mut g);
+        render(g);
 
         g.number_of_renders += 1;
         g.previous_instant = g.current_instant;
 
-        return true;
+        true
     }
 
     pub fn re_accumulate(&mut self) {
