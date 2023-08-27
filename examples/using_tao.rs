@@ -7,6 +7,7 @@ use game_loop::tao::event::{Event, WindowEvent};
 use game_loop::tao::event_loop::EventLoop;
 use game_loop::tao::menu::{MenuBar, MenuItem};
 use game_loop::tao::window::{Window, WindowBuilder};
+use std::sync::Arc;
 
 fn main() {
     let mut file_menu = MenuBar::new();
@@ -16,7 +17,9 @@ fn main() {
     menu.add_submenu("File", true, file_menu);
 
     let event_loop = EventLoop::new();
+
     let window = WindowBuilder::new().with_menu(menu).build(&event_loop).unwrap();
+    let window = Arc::new(window);
 
     let game = Game::new();
 

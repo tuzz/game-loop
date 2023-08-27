@@ -96,14 +96,15 @@ mod helper {
     use tao::event::Event;
     use tao::event_loop::{ControlFlow, EventLoop};
     use tao::window::Window;
+    use std::sync::Arc;
 
     pub use tao;
 
-    pub fn game_loop<G, U, R, H, T>(event_loop: EventLoop<T>, window: Window, game: G, updates_per_second: u32, max_frame_time: f64, mut update: U, mut render: R, mut handler: H) -> !
+    pub fn game_loop<G, U, R, H, T>(event_loop: EventLoop<T>, window: Arc<Window>, game: G, updates_per_second: u32, max_frame_time: f64, mut update: U, mut render: R, mut handler: H) -> !
         where G: 'static,
-              U: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
-              R: FnMut(&mut GameLoop<G, Time, Window>) + 'static,
-              H: FnMut(&mut GameLoop<G, Time, Window>, &Event<'_, T>) + 'static,
+              U: FnMut(&mut GameLoop<G, Time, Arc<Window>>) + 'static,
+              R: FnMut(&mut GameLoop<G, Time, Arc<Window>>) + 'static,
+              H: FnMut(&mut GameLoop<G, Time, Arc<Window>>, &Event<'_, T>) + 'static,
               T: 'static,
     {
         let mut game_loop = GameLoop::new(game, updates_per_second, max_frame_time, window);
