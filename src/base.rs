@@ -62,7 +62,7 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
             update(g);
 
             g.accumulated_time -= g.fixed_time_step;
-            g.number_of_updates += 1;
+            g.number_of_updates = g.number_of_updates.wrapping_add(1);
         }
 
         g.blending_factor = g.accumulated_time / g.fixed_time_step;
@@ -71,7 +71,7 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
             T::sleep(g.fixed_time_step);
         } else {
             render(g);
-            g.number_of_renders += 1;
+            g.number_of_renders = g.number_of_renders.wrapping_add(1);
         }
 
         g.previous_instant = g.current_instant;
