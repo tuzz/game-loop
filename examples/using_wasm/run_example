@@ -9,4 +9,4 @@ wasm-pack build --dev --target no-modules --out-dir target --out-name index && \
 mv target/index_bg.wasm target/index.wasm                                   && \
                                                                                \
 echo "Starting server at http://localhost:8000"                             && \
-live-server -h 0.0.0.0 -p 8000
+live-server --host 0.0.0.0 --port 8000
