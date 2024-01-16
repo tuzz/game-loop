@@ -9,8 +9,8 @@ pub struct GameLoop<G, T: TimeTrait, W> {
     pub window_occluded: bool,
 
     fixed_time_step: f64,
-    number_of_updates: u32,
-    number_of_renders: u32,
+    number_of_updates: u64,
+    number_of_renders: u64,
     last_frame_time: f64,
     running_time: f64,
     accumulated_time: f64,
@@ -111,11 +111,11 @@ impl<G, T: TimeTrait, W> GameLoop<G, T, W> {
         self.fixed_time_step
     }
 
-    pub fn number_of_updates(&self) -> u32 {
+    pub fn number_of_updates(&self) -> u64 {
         self.number_of_updates
     }
 
-    pub fn number_of_renders(&self) -> u32 {
+    pub fn number_of_renders(&self) -> u64 {
         self.number_of_renders
     }
 
