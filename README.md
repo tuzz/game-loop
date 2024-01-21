@@ -59,7 +59,7 @@ You can enable this in your Cargo.toml:
 
 ```toml
 [dependencies]
-game_loop = { version = "*", features = ["winit"] } # or tao
+game-loop = { version = "*", features = ["winit"] } # or tao
 ```
 
 With one of these features enabled, the interface is a little bit different:
