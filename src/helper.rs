@@ -72,6 +72,7 @@ mod helper {
 mod helper {
     use super::*;
     use std::sync::Arc;
+    use winit::error::EventLoopError;
     use winit::event::{Event, WindowEvent};
     use winit::event_loop::{ControlFlow, EventLoop};
     use winit::window::Window;
@@ -87,7 +88,7 @@ mod helper {
         mut update: U,
         mut render: R,
         mut handler: H,
-    ) -> Result<(), impl std::error::Error>
+    ) -> Result<(), EventLoopError>
     where
         G: 'static,
         U: FnMut(&mut GameLoop<G, Time, Arc<Window>>) + 'static,
