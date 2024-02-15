@@ -9,7 +9,7 @@ use game_loop::winit::window::{Window, WindowBuilder};
 use std::sync::Arc;
 
 fn main() {
-    let event_loop = EventLoop::new();
+    let event_loop = EventLoop::new().unwrap();
 
     let window = WindowBuilder::new().build(&event_loop).unwrap();
     let window = Arc::new(window);
@@ -22,7 +22,7 @@ fn main() {
         g.game.your_render_function(&g.window);
     }, |g, event| {
         if !g.game.your_window_handler(event) { g.exit(); }
-    });
+    }).unwrap();
 }
 
 #[derive(Default)]
