@@ -1,6 +1,6 @@
 [package]
 name = "game-loop"
-version = "1.0.1"
+version = "1.1.0"
 authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 edition = "2018"
 license = "MIT"
