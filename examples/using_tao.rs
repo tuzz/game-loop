@@ -5,20 +5,41 @@ use game_loop::game_loop;
 
 use game_loop::tao::event::{Event, WindowEvent};
 use game_loop::tao::event_loop::EventLoop;
-use game_loop::tao::menu::{MenuBar, MenuItem};
 use game_loop::tao::window::{Window, WindowBuilder};
+use muda::{Menu, MenuEvent, Submenu};
 use std::sync::Arc;
 
 fn main() {
-    let mut file_menu = MenuBar::new();
-    file_menu.add_native_item(MenuItem::Quit);
-
-    let mut menu = MenuBar::new();
-    menu.add_submenu("File", true, file_menu);
-
     let event_loop = EventLoop::new();
 
-    let window = WindowBuilder::new().with_menu(menu).build(&event_loop).unwrap();
+    let window = WindowBuilder::new().build(&event_loop).unwrap();
+
+    let menu = Menu::new();
+    #[cfg(target_os = "windows")]
+    {
+        use game_loop::tao::platform::windows::WindowExtWindows as _;
+        let file_menu = Submenu::new("&File", true);
+        menu.append(&file_menu).unwrap();
+        file_menu.append(&muda::PredefinedMenuItem::quit(None)).unwrap();
+        menu.init_for_hwnd(window.hwnd() as _).unwrap();
+    }
+    #[cfg(target_os = "linux")]
+    {
+        use game_loop::tao::platform::unix::WindowExtUnix as _;
+        let file_menu = Submenu::new("File", true);
+        menu.append(&file_menu).unwrap();
+        file_menu.append(&MenuItem::with_id("quit", "Quit", true, None)).unwrap();
+        menu.init_for_gtk_window(window.gtk_window(), window.default_vbox()).unwrap();
+    }
+    #[cfg(target_os = "macos")]
+    {
+        use game_loop::tao::platform::macos::WindowExtMacOS as _;
+        let app_menu = Submenu::new("App", true);
+        menu::append(&app_menu).unwrap();
+        app_menu::append(&muda::PredefinedMenuItem::quit(None)).unwrap();
+        menu.init_for_nsapp();
+    }
+
     let window = Arc::new(window);
 
     let game = Game::new();
@@ -62,6 +83,12 @@ impl Game {
                 _ => {}
             },
             _ => {}
+        }
+
+        if let Ok(event) = MenuEvent::receiver().try_recv() {
+            if event.id.0 == "quit" {
+                return false;
+            }
         }
 
         true

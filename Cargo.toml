@@ -24,7 +24,10 @@ features = [
 
 [dependencies]
 winit = { version = "0.30", optional = true }
-tao = { version = "0.21", optional = true }
+tao = { version = "0.30", optional = true }
+
+[dev-dependencies]
+muda = "0.14"
 
 [[example]]
 name = "using_winit"
