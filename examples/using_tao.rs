@@ -33,10 +33,9 @@ fn main() {
     }
     #[cfg(target_os = "macos")]
     {
-        use game_loop::tao::platform::macos::WindowExtMacOS as _;
         let app_menu = Submenu::new("App", true);
-        menu::append(&app_menu).unwrap();
-        app_menu::append(&muda::PredefinedMenuItem::quit(None)).unwrap();
+        menu.append(&app_menu).unwrap();
+        app_menu.append(&muda::PredefinedMenuItem::quit(None)).unwrap();
         menu.init_for_nsapp();
     }
 
