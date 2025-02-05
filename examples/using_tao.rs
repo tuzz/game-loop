@@ -28,7 +28,7 @@ fn main() {
         use game_loop::tao::platform::unix::WindowExtUnix as _;
         let file_menu = Submenu::new("File", true);
         menu.append(&file_menu).unwrap();
-        file_menu.append(&MenuItem::with_id("quit", "Quit", true, None)).unwrap();
+        file_menu.append(&muda::MenuItem::with_id("quit", "Quit", true, None)).unwrap();
         menu.init_for_gtk_window(window.gtk_window(), window.default_vbox()).unwrap();
     }
     #[cfg(target_os = "macos")]
